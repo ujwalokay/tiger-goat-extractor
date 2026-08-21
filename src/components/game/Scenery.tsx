@@ -289,12 +289,12 @@ export default function Scenery() {
         </mesh>
       ))}
 
-      <Temple position={[-9, 0, -7]} rotation={0.5} scale={1.0} />
+      <Temple position={[-9, 0, -7]} rotation={0.5} scale={0.95} />
       <Temple position={[8.5, 0, -8]} rotation={-0.4} scale={0.9} />
       <Temple position={[0, 0, -13]} rotation={0} scale={1.3} />
 
-      <Banner position={[-5.6, 0, 1.8]} rotation={0.5} scale={1.0} />
-      <Banner position={[5.6, 0, 1.8]} rotation={-0.5 + Math.PI} scale={1.0} />
+      <Banner position={[-4.7, 0, 3.6]} rotation={0.5} scale={0.95} />
+      <Banner position={[4.7, 0, 3.6]} rotation={-0.5 + Math.PI} scale={0.95} />
 
       {cobbles.map((c, i) => (
         <Cobble key={`c${i}`} position={c.p} scale={c.s} rot={c.r} tone={c.tone} />
