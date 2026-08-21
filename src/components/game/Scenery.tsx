@@ -243,7 +243,7 @@ export default function Scenery() {
     const bushes: Array<{ p: [number, number, number]; s: number }> = [];
     for (let i = 0; i < 22; i++) {
       const a = rand() * Math.PI * 2;
-      const r = 6.4 + rand() * 9;
+      const r = 5.0 + rand() * 10;
       bushes.push({ p: [Math.cos(a) * r, 0, Math.sin(a) * r], s: 0.7 + rand() * 0.8 });
     }
 
@@ -262,7 +262,7 @@ export default function Scenery() {
     const cobbles: Array<{ p: [number, number, number]; s: number; r: number; tone: string }> = [];
     for (let i = 0; i < 60; i++) {
       const a = rand() * Math.PI * 2;
-      const r = 6.6 + rand() * 8.5;
+      const r = 5.2 + rand() * 9.5;
       cobbles.push({
         p: [Math.cos(a) * r, 0.02, Math.sin(a) * r],
         s: 0.45 + rand() * 0.6,
@@ -293,8 +293,8 @@ export default function Scenery() {
       <Temple position={[8.5, 0, -8]} rotation={-0.4} scale={0.9} />
       <Temple position={[0, 0, -13]} rotation={0} scale={1.3} />
 
-      <Banner position={[-6.6, 0, 3.2]} rotation={0.45} scale={1.15} />
-      <Banner position={[6.6, 0, 3.2]} rotation={-0.45 + Math.PI} scale={1.15} />
+      <Banner position={[-4.9, 0, 5.2]} rotation={0.5} scale={1.1} />
+      <Banner position={[4.9, 0, 5.2]} rotation={-0.5 + Math.PI} scale={1.1} />
 
       {cobbles.map((c, i) => (
         <Cobble key={`c${i}`} position={c.p} scale={c.s} rot={c.r} tone={c.tone} />
