@@ -173,7 +173,6 @@ function Index() {
           <SidePanel
             side="tiger"
             title="TIGERS"
-            emoji="🐯"
             value={`${tigersLeft} Tigers`}
             objective="Capture 5 Goats"
             active={game.turn === "tiger"}
@@ -181,7 +180,6 @@ function Index() {
           <SidePanel
             side="goat"
             title="GOATS"
-            emoji="🐐"
             value={`${goatsOnBoard} Goats`}
             objective="Survive or Trap Tigers"
             active={game.turn === "goat"}
@@ -307,14 +305,12 @@ function IconButton({
 function SidePanel({
   side,
   title,
-  emoji,
   value,
   objective,
   active,
 }: {
   side: "tiger" | "goat";
   title: string;
-  emoji: string;
   value: string;
   objective: string;
   active: boolean;
@@ -330,7 +326,10 @@ function SidePanel({
           side === "tiger" ? "bg-orange-900/90" : "bg-blue-900/90"
         }`}
       >
-        <span className="text-2xl leading-none">{emoji}</span>
+        <span
+          className={`size-6 shrink-0 rounded-full border-2 border-white/70 ${side === "tiger" ? "bg-orange-400" : "bg-stone-100"}`}
+          aria-hidden
+        />
         <span className="text-lg font-black tracking-wide text-white sm:text-xl">{title}</span>
       </div>
       <div className="px-3 py-2 text-center text-base font-bold text-white sm:text-lg">{value}</div>
