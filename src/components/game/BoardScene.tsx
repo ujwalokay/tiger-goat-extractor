@@ -400,26 +400,35 @@ function Scene({ board, selected, targets, onNodeClick }: BoardSceneProps) {
 export default function BoardScene(props: BoardSceneProps) {
   return (
     <Canvas
-      shadows
-      gl={{ alpha: true }}
+      shadows="soft"
+      gl={{ alpha: true, antialias: true, toneMappingExposure: 1.05 }}
       camera={{ position: [0, 8.0, 9.4], fov: 40 }}
       onCreated={({ camera }) => camera.lookAt(0, 0.4, 0)}
       dpr={[1, 2]}
     >
-      <ambientLight intensity={0.65} />
-      <hemisphereLight args={["#cfe8ff", "#4f7a35", 0.7]} />
+      <ambientLight intensity={0.5} color="#fff3dd" />
+      <hemisphereLight args={["#d8ecff", "#5d8f3f", 0.85]} />
+      {/* warm key sun */}
       <directionalLight
-        position={[6, 12, 6]}
-        intensity={1.8}
+        position={[7, 13, 7]}
+        intensity={2.1}
+        color="#fff0cf"
         castShadow
+        shadow-bias={-0.0006}
+        shadow-normalBias={0.02}
         shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-16}
         shadow-camera-right={16}
         shadow-camera-top={16}
         shadow-camera-bottom={-16}
       />
+      {/* cool bounce fill from the opposite side */}
+      <directionalLight position={[-8, 5, -6]} intensity={0.45} color="#bcd9ff" />
+      {/* soft rim to lift the board edge */}
+      <directionalLight position={[0, 4, -10]} intensity={0.3} color="#ffd9a8" />
       <Scene {...props} />
       <Environment preset="park" />
     </Canvas>
+
   );
 }
