@@ -1,6 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { BookOpen, Clock, RotateCcw, Swords } from "lucide-react";
+import {
+  BookOpen,
+  Clock,
+  HelpCircle,
+  RotateCcw,
+  Settings,
+  Swords,
+  Undo2,
+  Users,
+} from "lucide-react";
 import {
   createGame,
   legalMovesFrom,
@@ -119,8 +128,12 @@ function Index() {
         ? "Tigers are prowling…"
         : "Tigers: move or jump over a goat";
 
+  const tigersLeft = game.board.filter((c) => c === "tiger").length;
+  const goatsOnBoard = game.board.filter((c) => c === "goat").length;
+  const turnNo = String(game.history.length + 1).padStart(2, "0");
+
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-sky-300 via-sky-200 to-emerald-200">
+    <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-sky-300 via-sky-200 to-emerald-300">
       <div className="absolute inset-0">
         {mounted ? (
           <Suspense fallback={null}>
@@ -135,49 +148,89 @@ function Index() {
       </div>
 
       {/* HUD */}
-      <div className="pointer-events-none relative z-10 flex min-h-screen flex-col justify-between p-4 sm:p-6">
-        <header className="flex flex-wrap items-start justify-between gap-3">
-          <div className="pointer-events-auto rounded-2xl border-2 border-amber-900/40 bg-amber-100/90 px-5 py-3 shadow-xl backdrop-blur">
-            <h1 className="text-2xl font-black tracking-tight text-amber-950 sm:text-3xl">
-              BAGH-CHAL
-            </h1>
-            <p className="text-xs font-semibold uppercase tracking-widest text-amber-800">
-              Tigers vs Goats
-            </p>
+      <div className="pointer-events-none relative z-10 flex min-h-screen flex-col justify-between p-3 sm:p-5">
+        <header className="flex items-start justify-between gap-3">
+          <IconButton label="Settings" onClick={() => setRulesOpen(true)}>
+            <Settings className="size-5" />
+          </IconButton>
+
+          <div className="rounded-2xl border border-black/40 bg-neutral-900/85 px-6 py-2 text-xl font-black tracking-wide text-white shadow-2xl backdrop-blur sm:text-2xl">
+            TURN <span className="text-amber-400">{turnNo}</span>
+            <Users className="ml-2 inline size-5 -translate-y-0.5" />
           </div>
-          <div className="pointer-events-auto flex gap-3">
-            <Stat label="Goats left" value={`${TOTAL_GOATS - game.goatsPlaced}`} />
-            <Stat label="Captured" value={`${game.goatsCaptured} / 5`} />
-            <Stat label="Turn" value={game.turn === "goat" ? "Goat" : "Tiger"} />
+
+          <div className="flex gap-2">
+            <IconButton label="Reset" onClick={reset}>
+              <Undo2 className="size-5" />
+            </IconButton>
+            <IconButton label="Rules" onClick={() => setRulesOpen(true)}>
+              <HelpCircle className="size-5" />
+            </IconButton>
           </div>
         </header>
 
-        <div className="mx-auto pointer-events-auto rounded-full border border-amber-900/30 bg-amber-50/90 px-5 py-2 text-sm font-semibold text-amber-950 shadow-lg backdrop-blur">
-          {status}
+        <div className="flex items-center justify-between gap-3">
+          <SidePanel
+            side="tiger"
+            title="TIGERS"
+            value={`${tigersLeft} Tigers`}
+            objective="Capture 5 Goats"
+            active={game.turn === "tiger"}
+          />
+          <SidePanel
+            side="goat"
+            title="GOATS"
+            value={`${goatsOnBoard} Goats`}
+            objective="Survive or Trap Tigers"
+            active={game.turn === "goat"}
+          />
         </div>
 
-        <footer className="flex flex-wrap items-end justify-between gap-3">
-          <div className="pointer-events-auto flex gap-2">
-            <ActionButton icon={<BookOpen className="size-4" />} onClick={() => setRulesOpen(true)}>
-              Rules
-            </ActionButton>
-            <ActionButton icon={<Clock className="size-4" />} onClick={() => setHistoryOpen(true)}>
-              History
-            </ActionButton>
+        <footer className="flex flex-col items-center gap-3">
+          <div
+            className={`rounded-xl border-b-4 px-10 py-3 text-xl font-black tracking-wide text-white shadow-2xl sm:text-2xl ${
+              game.winner
+                ? "border-amber-800 bg-amber-500"
+                : game.turn === "goat"
+                  ? "border-lime-800 bg-lime-500"
+                  : "border-orange-800 bg-orange-500"
+            }`}
+          >
+            {game.winner
+              ? game.winner === "tiger"
+                ? "TIGERS WIN"
+                : "GOATS WIN"
+              : game.turn === "goat"
+                ? "YOUR TURN"
+                : "TIGERS MOVING…"}
           </div>
-          <div className="pointer-events-auto flex gap-2">
-            <ActionButton icon={<RotateCcw className="size-4" />} onClick={reset}>
-              Reset
-            </ActionButton>
-            <ActionButton
-              icon={<Swords className="size-4" />}
-              onClick={() => {
-                setVsAi((v) => !v);
-                reset();
-              }}
-            >
-              {vsAi ? "New game (2P)" : "New game (vs AI)"}
-            </ActionButton>
+          <p className="rounded-full bg-black/40 px-4 py-1 text-xs font-semibold text-white backdrop-blur">
+            {status}
+          </p>
+
+          <div className="flex w-full flex-wrap items-center justify-between gap-2">
+            <div className="pointer-events-auto flex gap-2">
+              <ActionButton icon={<BookOpen className="size-4" />} onClick={() => setRulesOpen(true)}>
+                RULES
+              </ActionButton>
+              <ActionButton icon={<Clock className="size-4" />} onClick={() => setHistoryOpen(true)}>
+                HISTORY
+              </ActionButton>
+            </div>
+            <div className="pointer-events-auto flex gap-2">
+              <ActionButton icon={<RotateCcw className="size-4" />} onClick={reset}>
+                RESET
+              </ActionButton>
+              <ActionButton
+                icon={<Swords className="size-4" />}
+                onClick={() => {
+                  setVsAi((v) => !v);
+                  reset();
+                }}
+              >
+                {vsAi ? "NEW GAME (2P)" : "NEW GAME (AI)"}
+              </ActionButton>
+            </div>
           </div>
         </footer>
       </div>
@@ -229,11 +282,63 @@ function Index() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function IconButton({
+  children,
+  label,
+  onClick,
+}: {
+  children: React.ReactNode;
+  label: string;
+  onClick: () => void;
+}) {
   return (
-    <div className="rounded-xl border border-amber-900/30 bg-amber-50/90 px-4 py-2 text-center shadow-lg backdrop-blur">
-      <div className="text-[10px] font-bold uppercase tracking-widest text-amber-700">{label}</div>
-      <div className="text-lg font-black text-amber-950">{value}</div>
+    <button
+      aria-label={label}
+      onClick={onClick}
+      className="pointer-events-auto rounded-xl border border-black/40 bg-neutral-800/85 p-3 text-white shadow-xl backdrop-blur transition hover:bg-neutral-700"
+    >
+      {children}
+    </button>
+  );
+}
+
+function SidePanel({
+  side,
+  title,
+  value,
+  objective,
+  active,
+}: {
+  side: "tiger" | "goat";
+  title: string;
+  value: string;
+  objective: string;
+  active: boolean;
+}) {
+  return (
+    <div
+      className={`w-40 overflow-hidden rounded-2xl border border-black/40 bg-neutral-800/85 shadow-2xl backdrop-blur transition sm:w-52 ${
+        active ? "ring-2 ring-amber-300" : ""
+      }`}
+    >
+      <div
+        className={`flex items-center gap-2 px-3 py-2 ${
+          side === "tiger" ? "bg-orange-900/90" : "bg-blue-900/90"
+        }`}
+      >
+        <span
+          className={`size-6 shrink-0 rounded-full border-2 border-white/70 ${side === "tiger" ? "bg-orange-400" : "bg-stone-100"}`}
+          aria-hidden
+        />
+        <span className="text-lg font-black tracking-wide text-white sm:text-xl">{title}</span>
+      </div>
+      <div className="px-3 py-2 text-center text-base font-bold text-white sm:text-lg">{value}</div>
+      <div className="mx-3 border-t border-white/20" />
+      <div className="px-3 py-2 text-xs text-white/90 sm:text-sm">
+        <span className="font-bold">Objective:</span>
+        <br />
+        {objective}
+      </div>
     </div>
   );
 }
@@ -250,7 +355,7 @@ function ActionButton({
   return (
     <Button
       onClick={onClick}
-      className="gap-2 rounded-xl border-2 border-amber-900/40 bg-amber-100/90 font-bold text-amber-950 shadow-lg backdrop-blur hover:bg-amber-200"
+      className="gap-2 rounded-xl border-b-4 border-neutral-400 bg-neutral-200 font-black tracking-wide text-neutral-900 shadow-xl hover:bg-white"
       variant="secondary"
     >
       {icon}
@@ -258,3 +363,4 @@ function ActionButton({
     </Button>
   );
 }
+
