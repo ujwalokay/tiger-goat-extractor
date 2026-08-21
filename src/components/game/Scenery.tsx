@@ -110,12 +110,12 @@ function Temple({
         <meshStandardMaterial color={wall} roughness={0.95} flatShading />
       </mesh>
       {/* corner posts */}
-      {[
+      {([
         [-1.16, -1.16],
         [1.16, -1.16],
         [-1.16, 1.16],
         [1.16, 1.16],
-      ].map(([x, z], i) => (
+      ] as [number, number][]).map(([x, z], i) => (
         <mesh key={i} castShadow position={[x, 1.0, z]}>
           <boxGeometry args={[0.2, 1.2, 0.2]} />
           <meshStandardMaterial color={beam} roughness={0.9} flatShading />
@@ -145,12 +145,12 @@ function Temple({
         <boxGeometry args={[1.55, 0.9, 1.55]} />
         <meshStandardMaterial color={wall} roughness={0.95} flatShading />
       </mesh>
-      {[
+      {([
         [-0.72, -0.72],
         [0.72, -0.72],
         [-0.72, 0.72],
         [0.72, 0.72],
-      ].map(([x, z], i) => (
+      ] as [number, number][]).map(([x, z], i) => (
         <mesh key={i} castShadow position={[x, 2.55, z]}>
           <boxGeometry args={[0.16, 0.95, 0.16]} />
           <meshStandardMaterial color={beam} roughness={0.9} flatShading />
