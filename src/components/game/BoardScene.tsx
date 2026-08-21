@@ -51,8 +51,8 @@ function Engraving() {
   const tex = useLoader(THREE.TextureLoader, engraving);
   return (
     <mesh position={[-1.75, 0.403, -1.85]} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[1.7, 1.7]} />
-      <meshStandardMaterial map={tex} transparent opacity={0.6} color="#7a4a20" depthWrite={false} />
+      <planeGeometry args={[1.5, 1.5]} />
+      <meshStandardMaterial map={tex} transparent opacity={0.4} color="#6b3f1a" depthWrite={false} />
     </mesh>
   );
 }
@@ -402,7 +402,7 @@ export default function BoardScene(props: BoardSceneProps) {
     <Canvas
       shadows
       gl={{ alpha: true }}
-      camera={{ position: [0, 8.8, 10.2], fov: 40 }}
+      camera={{ position: [0, 8.0, 9.4], fov: 40 }}
       onCreated={({ camera }) => camera.lookAt(0, 0.4, 0)}
       dpr={[1, 2]}
     >
