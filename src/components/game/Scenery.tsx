@@ -63,50 +63,120 @@ function Temple({
   rotation?: number;
   scale?: number;
 }) {
+  const roofOrange = "#e2601a";
+  const roofOrangeDark = "#c2410c";
+  const beam = "#8a4a24";
+  const wall = "#f0e5cd";
+  const stone = "#c8c1ae";
+
+  /** one flared pagoda tier: eave slab + 4-sided pyramid cap */
+  const Tier = ({ y, r, h, c }: { y: number; r: number; h: number; c: string }) => (
+    <group position={[0, y, 0]} rotation={[0, Math.PI / 4, 0]}>
+      {/* thin flared eave */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[r, r * 1.08, 0.14, 4]} />
+        <meshStandardMaterial color={roofOrangeDark} roughness={0.7} flatShading />
+      </mesh>
+      {/* sloped cap */}
+      <mesh castShadow position={[0, h / 2 + 0.07, 0]}>
+        <cylinderGeometry args={[r * 0.28, r * 0.96, h, 4]} />
+        <meshStandardMaterial color={c} roughness={0.7} flatShading />
+      </mesh>
+    </group>
+  );
+
   return (
     <group position={position} rotation={[0, rotation, 0]} scale={scale}>
       {/* stepped stone plinth */}
-      <mesh castShadow receiveShadow position={[0, 0.12, 0]}>
-        <boxGeometry args={[3.4, 0.24, 3.4]} />
-        <meshStandardMaterial color="#b9b2a0" roughness={1} flatShading />
+      <mesh castShadow receiveShadow position={[0, 0.11, 0]}>
+        <boxGeometry args={[3.7, 0.22, 3.7]} />
+        <meshStandardMaterial color="#b0a993" roughness={1} flatShading />
       </mesh>
-      <mesh castShadow receiveShadow position={[0, 0.36, 0]}>
-        <boxGeometry args={[2.9, 0.24, 2.9]} />
-        <meshStandardMaterial color="#cfc7b3" roughness={1} flatShading />
+      <mesh castShadow receiveShadow position={[0, 0.33, 0]}>
+        <boxGeometry args={[3.2, 0.22, 3.2]} />
+        <meshStandardMaterial color={stone} roughness={1} flatShading />
       </mesh>
-      {/* walls */}
-      <mesh castShadow position={[0, 1.1, 0]}>
-        <boxGeometry args={[2.2, 1.25, 2.2]} />
-        <meshStandardMaterial color="#efe6d0" roughness={0.95} flatShading />
-      </mesh>
-      {/* doorway */}
-      <mesh position={[0, 0.9, 1.12]}>
-        <boxGeometry args={[0.7, 1, 0.05]} />
-        <meshStandardMaterial color="#4a2c14" roughness={1} />
-      </mesh>
-      {/* pagoda roofs (3 tiers) */}
-      {[
-        { y: 1.95, r: 2.3, h: 0.55, c: "#e2601a" },
-        { y: 2.55, r: 1.75, h: 0.5, c: "#d1500f" },
-        { y: 3.05, r: 1.15, h: 0.55, c: "#c2410c" },
-      ].map((t, i) => (
-        <mesh key={i} castShadow position={[0, t.y, 0]} rotation={[0, Math.PI / 4, 0]}>
-          <coneGeometry args={[t.r, t.h, 4]} />
-          <meshStandardMaterial color={t.c} roughness={0.75} flatShading />
+      {/* entry stairs */}
+      {[0, 1, 2].map((i) => (
+        <mesh key={i} castShadow receiveShadow position={[0, 0.07 + i * 0.11, 1.95 - i * 0.22]}>
+          <boxGeometry args={[1.5 - i * 0.12, 0.11, 0.24]} />
+          <meshStandardMaterial color={i % 2 ? "#d5cebb" : "#bfb8a4"} roughness={1} flatShading />
         </mesh>
       ))}
+
+      {/* ground floor walls */}
+      <mesh castShadow receiveShadow position={[0, 1.0, 0]}>
+        <boxGeometry args={[2.45, 1.15, 2.45]} />
+        <meshStandardMaterial color={wall} roughness={0.95} flatShading />
+      </mesh>
+      {/* corner posts */}
+      {[
+        [-1.16, -1.16],
+        [1.16, -1.16],
+        [-1.16, 1.16],
+        [1.16, 1.16],
+      ].map(([x, z], i) => (
+        <mesh key={i} castShadow position={[x, 1.0, z]}>
+          <boxGeometry args={[0.2, 1.2, 0.2]} />
+          <meshStandardMaterial color={beam} roughness={0.9} flatShading />
+        </mesh>
+      ))}
+      {/* doorway + side windows */}
+      <mesh position={[0, 0.92, 1.24]}>
+        <boxGeometry args={[0.72, 1.0, 0.06]} />
+        <meshStandardMaterial color="#4a2c14" roughness={1} flatShading />
+      </mesh>
+      {[-0.85, 0.85].map((x) => (
+        <mesh key={x} position={[x, 1.16, 1.24]}>
+          <boxGeometry args={[0.42, 0.42, 0.06]} />
+          <meshStandardMaterial color="#6d4522" roughness={1} flatShading />
+        </mesh>
+      ))}
+
+      {/* lower roof */}
+      <Tier y={1.66} r={2.15} h={0.52} c={roofOrange} />
+
+      {/* upper storey: balcony + smaller walls */}
+      <mesh castShadow receiveShadow position={[0, 2.05, 0]}>
+        <boxGeometry args={[2.0, 0.12, 2.0]} />
+        <meshStandardMaterial color={beam} roughness={0.9} flatShading />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0, 2.55, 0]}>
+        <boxGeometry args={[1.55, 0.9, 1.55]} />
+        <meshStandardMaterial color={wall} roughness={0.95} flatShading />
+      </mesh>
+      {[
+        [-0.72, -0.72],
+        [0.72, -0.72],
+        [-0.72, 0.72],
+        [0.72, 0.72],
+      ].map(([x, z], i) => (
+        <mesh key={i} castShadow position={[x, 2.55, z]}>
+          <boxGeometry args={[0.16, 0.95, 0.16]} />
+          <meshStandardMaterial color={beam} roughness={0.9} flatShading />
+        </mesh>
+      ))}
+      <mesh position={[0, 2.6, 0.79]}>
+        <boxGeometry args={[0.6, 0.5, 0.05]} />
+        <meshStandardMaterial color="#6d4522" roughness={1} flatShading />
+      </mesh>
+
+      {/* upper roof */}
+      <Tier y={3.1} r={1.5} h={0.5} c={roofOrangeDark} />
+
       {/* gold finial */}
-      <mesh castShadow position={[0, 3.55, 0]}>
-        <cylinderGeometry args={[0.045, 0.045, 0.45, 6]} />
+      <mesh castShadow position={[0, 3.78, 0]}>
+        <cylinderGeometry args={[0.05, 0.05, 0.4, 6]} />
         <meshStandardMaterial color="#f5c542" metalness={0.6} roughness={0.3} />
       </mesh>
-      <mesh castShadow position={[0, 3.85, 0]}>
-        <octahedronGeometry args={[0.13, 0]} />
+      <mesh castShadow position={[0, 4.06, 0]}>
+        <octahedronGeometry args={[0.14, 0]} />
         <meshStandardMaterial color="#ffd75e" metalness={0.7} roughness={0.25} />
       </mesh>
     </group>
   );
 }
+
 
 /** Tall red hanging banner on a wooden frame with gold finials, like the reference art. */
 function Banner({
