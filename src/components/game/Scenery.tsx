@@ -181,7 +181,7 @@ function Rocks({
     <group position={position} scale={scale} rotation={[0, rot, 0]}>
       <mesh castShadow receiveShadow position={[0, 0.26, 0]} rotation={[0.2, 0.6, 0.1]}>
         <dodecahedronGeometry args={[0.46, 0]} />
-        <meshStandardMaterial color="#c3bcae" roughness={1} flatShading />
+        <meshStandardMaterial color="#b0a99b" roughness={1} flatShading />
       </mesh>
       <mesh castShadow receiveShadow position={[0.5, 0.15, 0.24]} rotation={[0.5, 1.2, 0.3]}>
         <dodecahedronGeometry args={[0.27, 0]} />
@@ -189,7 +189,7 @@ function Rocks({
       </mesh>
       <mesh castShadow receiveShadow position={[-0.42, 0.11, -0.2]} rotation={[0.1, 2.1, 0.4]}>
         <dodecahedronGeometry args={[0.2, 0]} />
-        <meshStandardMaterial color="#d3ccbd" roughness={1} flatShading />
+        <meshStandardMaterial color="#bdb6a7" roughness={1} flatShading />
       </mesh>
     </group>
   );
@@ -250,10 +250,10 @@ export default function Scenery() {
     const rocks: Array<{ p: [number, number, number]; s: number; r: number }> = [];
     for (let i = 0; i < 16; i++) {
       const a = rand() * Math.PI * 2;
-      const r = 6.2 + rand() * 8;
+      const r = 8.5 + rand() * 8;
       rocks.push({
         p: [Math.cos(a) * r, 0, Math.sin(a) * r],
-        s: 0.65 + rand() * 0.85,
+        s: 0.45 + rand() * 0.5,
         r: rand() * Math.PI,
       });
     }
@@ -262,7 +262,7 @@ export default function Scenery() {
     const cobbles: Array<{ p: [number, number, number]; s: number; r: number; tone: string }> = [];
     for (let i = 0; i < 60; i++) {
       const a = rand() * Math.PI * 2;
-      const r = 5.6 + rand() * 7.5;
+      const r = 6.6 + rand() * 8.5;
       cobbles.push({
         p: [Math.cos(a) * r, 0.02, Math.sin(a) * r],
         s: 0.45 + rand() * 0.6,
@@ -293,8 +293,8 @@ export default function Scenery() {
       <Temple position={[8.5, 0, -8]} rotation={-0.4} scale={0.9} />
       <Temple position={[0, 0, -13]} rotation={0} scale={1.3} />
 
-      <Banner position={[-5.4, 0, 4.4]} rotation={0.35} scale={1.05} />
-      <Banner position={[5.4, 0, 4.4]} rotation={-0.35 + Math.PI} scale={1.05} />
+      <Banner position={[-6.6, 0, 3.2]} rotation={0.45} scale={1.15} />
+      <Banner position={[6.6, 0, 3.2]} rotation={-0.45 + Math.PI} scale={1.15} />
 
       {cobbles.map((c, i) => (
         <Cobble key={`c${i}`} position={c.p} scale={c.s} rot={c.r} tone={c.tone} />
